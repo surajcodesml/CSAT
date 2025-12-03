@@ -19,7 +19,7 @@ import torch.nn.functional as F
 from natsort import natsorted
 
 
-main_folder = "../pickle_pretrain"
+main_folder = "pickle"
 # sub_folders = os.listdir(main_folder)
 # sub_folders = [path.join(main_folder, sf) for sf in sub_folders if path.isdir(path.join(main_folder, sf))]
 # ann_folder = "original_annotations"

@@ -8,6 +8,7 @@ import random
 import argparse
 import datetime
 import numpy as np
+import yaml
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.distributed as dist
@@ -42,11 +43,9 @@ from eval.eval import EvaluationCriterion, Meter
 
 import wandb
 
-wb = False
 os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
 os.environ['TORCH_DISTRIBUTED_DEBUG'] = 'DETAIL'
 TQDM_BAR_FORMAT = '{desc} {n_fmt}/{total_fmt} [{elapsed} | {remaining} | {rate_fmt}]'
-SAVE_PATH = 'runs/'
 
 torch.manual_seed(1213)
 np.random.seed(2022)
@@ -54,14 +53,14 @@ random.seed(1027)
 
 
 
-def setup(rank, world_size):
+def setup(rank, world_size, config):
 	# Initialize the process group
 	dist.init_process_group(
-		backend="nccl",
-		init_method="tcp://127.0.0.1:12426",
+		backend=config['distributed']['backend'],
+		init_method=config['distributed']['init_method'],
 		rank=rank,
 		world_size=world_size,
-		timeout=datetime.timedelta(seconds=5000)
+		timeout=datetime.timedelta(seconds=config['distributed']['timeout'])
 	)
 	# Set the GPU to use
 	torch.cuda.set_device(rank)
@@ -104,7 +103,7 @@ def get_dataset(rank, world_size, dataroot, phase, batch_size, r, space):
 
 
 
-def compute_loss(outputs, targets, criterion, nc=2):
+def compute_loss(outputs, targets, criterion, nc=2, wb=False):
 
 	loss_dict = criterion(outputs, targets) #.to(outputs.device)
 	if not loss_dict['loss_ce']:
@@ -121,7 +120,7 @@ def compute_loss(outputs, targets, criterion, nc=2):
 	return loss_elements, total_loss
 
 
-def train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion, nc):
+def train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion, nc, wb=False):
 		
 	model.train()
 	criterion.train()
@@ -145,7 +144,7 @@ def train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion, 
 		outputs = {'pred_logits':outputs[0], 'pred_boxes': outputs[1]}
 		targets = [{'labels': t[:,0], 'boxes':t[:,1:]} for t in target]
 	
-		l_dict, loss = compute_loss(outputs, targets, criterion)
+		l_dict, loss = compute_loss(outputs, targets, criterion, nc, wb)
 		p = ls.adds(loss)
 		d = ls_dict.adds(l_dict)
 
@@ -172,18 +171,21 @@ def train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion, 
 	
 	
 	
-def run_eval(rank, root, epoch, lr_scheduler, model, val_loader, criterion_val, nc, best_fitness):
+def run_eval(rank, root, epoch, lr_scheduler, model, val_loader, criterion_val, nc, best_fitness, config):
 	
-	fitness, valloss = epoch_validate(rank, model, val_loader, criterion_val, nc, wb=wb)
-	if wb:
+	fitness, valloss = epoch_validate(rank, model, val_loader, criterion_val, nc, wb=config['wandb']['enabled'])
+	if config['wandb']['enabled']:
 		wandb.log({'fitness':fitness})
 	
 	if rank==0:
+		output_dir = root + config['paths']['output_dir']
+		os.makedirs(output_dir, exist_ok=True)
+		
 		if fitness>best_fitness:
-			save_path = f'{root}outputs/detection_best.pth'
+			save_path = f'{output_dir}detection_best.pth'
 			best_fitness = fitness
 		else:
-			save_path = f'{root}outputs/detection_last.pth'
+			save_path = f'{output_dir}detection_last.pth'
 
 		print(('\n%44s' + '%22s') % ('Saved model as:', save_path))
 		checkpoint = {
@@ -194,27 +196,45 @@ def run_eval(rank, root, epoch, lr_scheduler, model, val_loader, criterion_val, 
 				'best_fitness': best_fitness,
 			}
 		torch.save(checkpoint, save_path)
-		# torch.save(model, save_path)
 	return model, fitness, best_fitness, valloss
 
 
 def load_saved_model(weights_path, root, M, O=None):
-	ckptfile = root + 'runs/' + weights_path + '.pth'
-	ckpts = torch.load(ckptfile)
+	# Handle both absolute paths and relative paths
+	if os.path.isabs(weights_path) or os.path.exists(weights_path):
+		ckptfile = weights_path
+	elif os.path.exists(root + weights_path):
+		ckptfile = root + weights_path
+	else:
+		ckptfile = root + 'runs/' + weights_path + '.pth'
+	
+	if not os.path.exists(ckptfile):
+		raise FileNotFoundError(f"Checkpoint file not found: {ckptfile}")
+		
+	ckpts = torch.load(ckptfile, map_location='cpu')
 	ckpt = ckpts['model_state_dict']
+	
 	if O is None:
+		# Loading pretrained encoder weights
 		new_state_dict = OrderedDict()
 		for key, value in ckpt.items():
 			new_key = key.replace('module.encoder.', '')
 			new_state_dict[new_key] = value
-		M.load_state_dict(new_state_dict)
+		M.load_state_dict(new_state_dict, strict=False)
+		print(f'Loaded pretrained encoder weights from {ckptfile}')
+		if 'best_val_acc' in ckpts:
+			print(f'Pretrained model best validation accuracy: {ckpts["best_val_acc"]:.4f}')
 
 	
 	if O is not None:
+		# Resuming full training
 		M.load_state_dict(ckpt)
-		O.load_state_dict(ckpts['scheduler_state_dict'])
+		if 'lr_state_dict' in ckpts:
+			O.load_state_dict(ckpts['lr_state_dict'])
+		elif 'scheduler_state_dict' in ckpts:
+			O.load_state_dict(ckpts['scheduler_state_dict'])
 		start_epoch = ckpts['epoch']+1
-		best_accuracy = ckpts['best_fitness']
+		best_accuracy = ckpts.get('best_fitness', ckpts.get('fitness', 0))
 		return M, O, start_epoch, best_accuracy
 
 	return M
@@ -222,26 +242,31 @@ def load_saved_model(weights_path, root, M, O=None):
 
 
 # def detector(rank, world_size, root, dataroot, pretraining=False, pretrained_weights_path='best_pretrainer.pth', resume=False):
-def detector(rank, world_size, opt):
-	setup(rank, world_size)
+def detector(rank, world_size, config):
+	setup(rank, world_size, config)
 	
-	nc = opt.nc
-	epochs = opt.epochs
-	r = opt.r
-	space = opt.space
-	batch_size = opt.train_batch
-	val_batch_size = opt.val_batch
+	# Extract config parameters
+	nc = config['model']['num_classes']
+	epochs = config['training']['epochs']
+	r = config['data']['r']
+	space = config['data']['space']
+	batch_size = config['training']['train_batch_size']
+	val_batch_size = config['training']['val_batch_size']
 
-	dataroot = opt.dataroot
-	root = opt.root
+	dataroot = config['paths']['dataroot']
+	root = config['paths']['root']
 
-	resume = opt.resume
-	resume_weights = opt.resume_weights
+	resume = config['resume']['enabled']
+	resume_weights = config['resume']['weights_path']
 
-	pretraining = opt.pretrain 
-	pretrain_weights = opt.pretrain_weights
+	pretraining = config['pretrain']['use_pretrained']
+	pretrain_weights = config['paths']['pretrain_weights']
 
-	encoder = Encoder(hidden_dim=256,num_encoder_layers=6, nheads=8).to(rank)
+	encoder = Encoder(
+		hidden_dim=config['model']['hidden_dim'],
+		num_encoder_layers=config['model']['num_encoder_layers'],
+		nheads=config['model']['nheads']
+	).to(rank)
 	# encoder = DDP(encoder, device_ids=[rank], find_unused_parameters=False)
 	for i, n in encoder.named_parameters():
 		# if n.requires_grad:
@@ -249,25 +274,46 @@ def detector(rank, world_size, opt):
 	print('\n\n')
 	if pretraining:
 		encoder = load_saved_model(pretrain_weights, root, encoder, None)
-		# for param in encoder.parameters():
-		# 	param.requires_grad = False
-		print('Pretrained model {} loaded'.format(pretrain_weights))
+		if config['pretrain']['freeze_encoder']:
+			for param in encoder.parameters():
+				param.requires_grad = False
+			print('Pretrained model {} loaded (frozen)'.format(pretrain_weights))
+		else:
+			print('Pretrained model {} loaded'.format(pretrain_weights))
 
 	train_data = get_dataset(rank, world_size, dataroot, 'train', batch_size, r, space)
 	val_dataset = get_dataset(rank, world_size, dataroot, 'val', batch_size, r, space)
 	# gc.collect()
 	
 	# define detection model
-	model = Dent_Pt(encoder, hidden_dim=256, num_class=2).to(rank)
+	model = Dent_Pt(
+		encoder, 
+		hidden_dim=config['model']['hidden_dim'], 
+		num_class=config['model']['num_classes']
+	).to(rank)
 	model.train()
 	pytorch_total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-	print(pytorch_total_params)
-	print(A)
+	if rank == 0:
+		print(f'Total trainable parameters: {pytorch_total_params:,}')
 	model = DDP(model, device_ids=[rank], find_unused_parameters=True)
 
 	# declare optimizer and scheduler
-	optimizer = torch.optim.AdamW(model.parameters(), lr=0.0001, foreach=None, fused=True)
-	lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=2, cooldown=2, factor=0.1, mode='min')
+	optimizer = torch.optim.AdamW(
+		model.parameters(), 
+		lr=config['training']['learning_rate'],
+		weight_decay=config['training']['weight_decay'],
+		foreach=None, 
+		fused=True
+	)
+	
+	lr_config = config['training']['lr_scheduler']
+	lr_scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+		optimizer, 
+		patience=lr_config['patience'],
+		cooldown=lr_config['cooldown'],
+		factor=lr_config['factor'],
+		mode=lr_config['mode']
+	)
 
 	train_loader, sampler = get_loader(train_data, batch_size, world_size, rank)
 	val_loader, _ = get_loader(val_dataset, val_batch_size, world_size, rank)
@@ -290,16 +336,19 @@ def detector(rank, world_size, opt):
 		if rank == 0:
 			print('Resuming training from epoch {}. Loaded weights from {}. Last best accuracy was {}'
 				.format(start_epoch, resume_weights, best_accuracy))
+	
+	wb = config['wandb']['enabled']
 	if wb:
 		wandb.login()
 		wandb.init(
-		project="scr", 
-		name=f"train", 
-		config={
-		"architecture": "DENT",
-		"dataset": "SCR",
-		"epochs": opt.epochs,
-		})
+			project=config['wandb']['project'], 
+			name=config['wandb']['name'], 
+			config={
+				"architecture": "DENT",
+				"dataset": "SCR",
+				"epochs": epochs,
+				**config
+			})
   
 	
 	for epoch in range(start_epoch, epochs):
@@ -310,8 +359,8 @@ def detector(rank, world_size, opt):
 			wandb.define_metric("loss", summary="min")
 			wandb.define_metric("best_fitness", summary="max")
 
-		model, train_loss = train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion_train, nc=nc)		
-		model, fitness, best_fitness, loss = run_eval(rank, root, epoch, lr_scheduler, model, val_loader, criterion_val, nc, best_fitness)
+		model, train_loss = train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion_train, nc=nc, wb=wb)		
+		model, fitness, best_fitness, loss = run_eval(rank, root, epoch, lr_scheduler, model, val_loader, criterion_val, nc, best_fitness, config)
 		lr_scheduler.step(train_loss)
 
 	if wb:
@@ -321,29 +370,39 @@ def detector(rank, world_size, opt):
 		
 
 
+def load_config(config_path='config.yaml'):
+	"""Load configuration from YAML file."""
+	with open(config_path, 'r') as f:
+		config = yaml.safe_load(f)
+	return config
+
+
 def arg_parse():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--root', type=str, default='./', help='project root path')
-    parser.add_argument('--dataroot', type=str, default='./data', help='path to pickled dataset')
-    parser.add_argument('--world_size', type=int, default=1, help='World size')
-    parser.add_argument('--resume', type=bool, default=False, help='To resume or not to resume')
-    parser.add_argument('--resume_weights', type=str, default='best', help='path to trained weights if resume')
-    parser.add_argument('--pretrain', type=bool, default=False, help='Begin with pretrained weights or not. Must provide path if yes.')
-    parser.add_argument('--pretrain_weights', type=str, default='0best_pretrainer', help='path to pretrained weights. --pretrain must be true')
-    
-    parser.add_argument('--nc', type=int, default=2, help='number of classes')
-    parser.add_argument('--epochs', type=int, default=100, help='number of epochs to train')
-    parser.add_argument('--r', type=int, default=3, help='number of adjacent images to stack')
-    parser.add_argument('--space', type=int, default=1, help='Number of steps/ stride for next adjacent image block')
-    parser.add_argument('--train_batch', type=int, default=64, help='training batch size')
-    parser.add_argument('--val_batch', type=int, default=64, help='validation batch size')
-
-    return parser.parse_args()
-
-
+	parser = argparse.ArgumentParser()
+	parser.add_argument('--config', type=str, default='config.yaml', help='path to config file')
+	parser.add_argument('--world_size', type=int, default=None, help='override world size from config')
+	parser.add_argument('--epochs', type=int, default=None, help='override number of epochs')
+	parser.add_argument('--batch_size', type=int, default=None, help='override batch size')
+	parser.add_argument('--lr', type=float, default=None, help='override learning rate')
+	return parser.parse_args()
 
 
 if __name__ == '__main__':
-
-	opt = arg_parse()
-	mp.spawn(detector, args=(opt.world_size, opt), nprocs=opt.world_size, join=True)
+	args = arg_parse()
+	
+	# Load config from YAML
+	config = load_config(args.config)
+	
+	# Override config with command line arguments if provided
+	if args.world_size is not None:
+		config['distributed']['world_size'] = args.world_size
+	if args.epochs is not None:
+		config['training']['epochs'] = args.epochs
+	if args.batch_size is not None:
+		config['training']['train_batch_size'] = args.batch_size
+		config['training']['val_batch_size'] = args.batch_size
+	if args.lr is not None:
+		config['training']['learning_rate'] = args.lr
+	
+	world_size = config['distributed']['world_size']
+	mp.spawn(detector, args=(world_size, config), nprocs=world_size, join=True)

@@ -175,18 +175,35 @@ class LoadImagesAndLabels(Dataset):
 
 		# *************************************************************************************************
 
-	def create_labelout(self, b,c):
+	def create_labelout(self, b, c):
 		# [bi, class, x, y, w, h]
-		c = [cl+1 if cl <2 else 0 for cl in c]
-		if 0 in c:
-			b = torch.empty((0,4))
-			c = torch.zeros((0,1))
+		# Filter out label 2 (no boxes) - keep only 0 (Fovea) and 1 (SCR)
+		# Convert to tensors if not already
+		if isinstance(c, torch.Tensor):
+			c = c.cpu().numpy() if c.is_cuda else c.numpy()
+		if isinstance(b, torch.Tensor):
+			b = b.cpu().numpy() if b.is_cuda else b.numpy()
+		
+		c = np.array(c).flatten()
+		b = np.array(b).reshape(-1, 4)
+		
+		# Filter out invalid boxes (label == 2 or all-zero boxes)
+		valid_mask = (c != 2) & ~np.all(b == 0, axis=1)
+		c_filtered = c[valid_mask]
+		b_filtered = b[valid_mask]
+		
+		if len(c_filtered) == 0:
+			# No valid boxes - return empty tensors
+			b_tensor = torch.empty((0, 4))
+			c_tensor = torch.zeros((0, 1))
 		else:
-			b = torch.tensor(b)
-			c = torch.tensor(c).reshape((-1,1))
+			# Add 1 to labels: 0→1 (Fovea becomes class 1), 1→2 (SCR becomes class 2)
+			c_filtered = c_filtered + 1
+			b_tensor = torch.from_numpy(b_filtered).float()
+			c_tensor = torch.from_numpy(c_filtered).reshape((-1, 1)).float()
 
-		d = torch.zeros_like(c)
-		lab = torch.cat([d,c,b], dim=-1).float()
+		d = torch.zeros_like(c_tensor)
+		lab = torch.cat([d, c_tensor, b_tensor], dim=-1).float()
 		return lab
 
 
@@ -232,27 +249,37 @@ class LoadImagesAndLabels(Dataset):
 			bo = d['box']
 			clss = d['label']
 			nm = d['name']
+			
+			# Ensure numpy arrays for consistent processing
+			if isinstance(im, torch.Tensor):
+				im = im.numpy()
+			if isinstance(bo, torch.Tensor):
+				bo = bo.numpy()
+			if isinstance(clss, torch.Tensor):
+				clss = clss.numpy()
+				
 		return im, bo, clss, nm
 
 
 
-	def __getitem__(self,index):
-		r=self.r
-		space=self.space
+	def __getitem__(self, index):
+		r = self.r
+		space = self.space
 
 		neighborhood = self.lookup(index)
 
-		image = [None]*r
+		image = [None] * r
 		labels = []
 		nms = ''
 		for i, ind in enumerate(neighborhood):
 			img, box, clss, nm = self.load_pickle(ind)
-			# img = cv2.merge([img, img, img])
+			# Images are stored as [C, H, W] tensors, keep as is
 			image[i] = img
 			if ind == index:
 				labels = self.create_labelout(box, clss)
 				nms = nm
 			 
+		# Stack images: shape will be [r, C, H, W]
 		image = np.stack(image)
 
 		image = torch.from_numpy(np.ascontiguousarray(image).astype(np.float32))

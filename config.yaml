@@ -1,0 +1,73 @@
+# CSAT Detector Training Configuration
+
+# Paths
+paths:
+  root: './'
+  dataroot: './pickle'
+  pretrain_weights: 'model/best_pretrainer.pth'
+  output_dir: 'runs/'
+  train_data: 'data/train.txt'
+  val_data: 'data/val.txt'
+
+# Model Architecture
+model:
+  hidden_dim: 256
+  num_encoder_layers: 6
+  num_decoder_layers: 6
+  nheads: 8
+  num_queries: 48
+  num_classes: 2
+  dropout: 0.1
+
+# Training Parameters
+training:
+  epochs: 100
+  train_batch_size: 64
+  val_batch_size: 64
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  
+  # Learning rate scheduler
+  lr_scheduler:
+    type: 'ReduceLROnPlateau'
+    patience: 2
+    cooldown: 2
+    factor: 0.1
+    mode: 'min'
+
+# Data Loading
+data:
+  r: 3  # number of adjacent images to stack
+  space: 1  # stride for next adjacent image block
+  num_workers: 6
+  cache: 'ram'  # 'ram' or 'disk' or false
+  shuffle: true
+
+# Distributed Training
+distributed:
+  world_size: 2
+  backend: 'nccl'
+  init_method: 'tcp://127.0.0.1:12426'
+  timeout: 5000
+
+# Pretrained Weights
+pretrain:
+  use_pretrained: true
+  freeze_encoder: false
+
+# Resume Training
+resume:
+  enabled: false
+  weights_path: 'runs/outputs/detection_best.pth'
+
+# Weights & Biases
+wandb:
+  enabled: false
+  project: 'scr'
+  name: 'train'
+
+# Logging
+logging:
+  print_freq: 10
+  save_best: true
+  save_last: true
