@@ -24,7 +24,7 @@ import torchvision.transforms.v2 as transforms
 from utils import TryExcept, threaded
 from utils.general import (CONFIG_DIR, FONT, LOGGER, check_font, check_requirements, clip_boxes, increment_path,
                            is_ascii, xywh2xyxy, xyxy2xywh)
-# from utils.metrics import fitness
+from eval.metrices import fitness
 # from utils.segment.general import scale_image
 # torchvision.disable_beta_transforms_warning()
 
@@ -92,7 +92,9 @@ class Annotator:
         if self.pil or not is_ascii(label):
             self.draw.rectangle(box, width=self.lw, outline=color)  # box
             if label:
-                w, h = self.font.getsize(label)  # text width, height
+                # Use getbbox for Pillow >= 10.0.0 compatibility
+                bbox = self.font.getbbox(label)
+                w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]  # text width, height
                 outside = box[1] - h >= 0  # label fits outside box
                 self.draw.rectangle(
                     (box[0], box[1] - h if outside else box[1], box[0] + w + 1,
@@ -138,7 +140,10 @@ class Annotator:
                 masks = masks.permute(1, 2, 0).contiguous()
                 masks = masks.cpu().numpy()
             # masks = np.ascontiguousarray(masks.transpose(1, 2, 0))
-            masks = scale_image(masks.shape[:2], masks, self.im.shape)
+            # Resize masks to image shape if needed
+            if masks.shape[:2] != self.im.shape[:2]:
+                import cv2
+                masks = cv2.resize(masks, (self.im.shape[1], self.im.shape[0]), interpolation=cv2.INTER_LINEAR)
             masks = np.asarray(masks, dtype=np.float32)
             colors = np.asarray(colors, dtype=np.float32)  # shape(n,3)
             s = masks.sum(2, keepdims=True).clip(0, 1)  # add all masks together
@@ -159,7 +164,11 @@ class Annotator:
             im_gpu = im_gpu.permute(1, 2, 0).contiguous()  # shape(h,w,3)
             im_gpu = im_gpu * inv_alph_masks[-1] + mcs
             im_mask = (im_gpu * 255).byte().cpu().numpy()
-            self.im[:] = scale_image(im_gpu.shape, im_mask, self.im.shape)
+            # Resize mask to image shape if needed
+            if im_mask.shape[:2] != self.im.shape[:2]:
+                import cv2
+                im_mask = cv2.resize(im_mask, (self.im.shape[1], self.im.shape[0]), interpolation=cv2.INTER_LINEAR)
+            self.im[:] = im_mask
         if self.pil:
             # convert im back to PIL and update draw
             self.fromarray(self.im)
@@ -171,7 +180,9 @@ class Annotator:
     def text(self, xy, text, txt_color=(255, 255, 255), anchor='top'):
         # Add text to image (PIL-only)
         if anchor == 'bottom':  # start y from font bottom
-            w, h = self.font.getsize(text)  # text width, height
+            # Use getbbox for Pillow >= 10.0.0 compatibility
+            bbox = self.font.getbbox(text)
+            w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]  # text width, height
             xy[1] += 1 - h
         self.draw.text(xy, text, fill=txt_color, font=self.font)
 
@@ -327,6 +338,8 @@ def plot_images(images, targets, paths=None, fname='images.jpg', names=['Fovea',
                         label = f'{cls}' if labels else f'{cls} {conf[j]:.1f}'
                         annotator.box_label(box, label, color=color)
     # wandb.image({fname: annotator.im})
+    # Create directory if it doesn't exist
+    Path(fname).parent.mkdir(parents=True, exist_ok=True)
     annotator.im.save(fname)  # save
 
 
@@ -343,7 +356,9 @@ def plot_lr_scheduler(optimizer, scheduler, epochs=300, save_dir=''):
     plt.grid()
     plt.xlim(0, epochs)
     plt.ylim(0)
-    plt.savefig(Path(save_dir) / 'LR.png', dpi=200)
+    save_path = Path(save_dir) / 'LR.png'
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(save_path, dpi=200)
     plt.close()
 
 
@@ -425,8 +440,12 @@ def plot_val_study(file='', dir='', x=None):  # from utils.plots import *; plot_
 # @TryExcept()  # known issue https://github.com/ultralytics/yolov5/issues/5395
 def plot_labels(labels, names=(), save_dir=Path('')):
     # plot dataset labels
-    return
     LOGGER.info(f"Plotting labels to {save_dir / 'labels.jpg'}... ")
+    
+    # Ensure save directory exists
+    save_dir = Path(save_dir)
+    save_dir.mkdir(parents=True, exist_ok=True)
+    
     labels = labels[:,2:]
     ci, b = labels[:, 0], labels[:, 1:]  # classes, boxes
     c = ci[ci<2]
@@ -434,14 +453,12 @@ def plot_labels(labels, names=(), save_dir=Path('')):
     nc = int(c.max() + 1)  # number of classes
     x = pd.DataFrame(b.transpose(1,0), columns=['x', 'y', 'width', 'height'])
 
-
     # seaborn correlogram
     sn.pairplot(x, corner=True, diag_kind='auto', kind='hist', diag_kws=dict(bins=50), plot_kws=dict(pmax=0.9))
     plt.savefig(save_dir / 'labels_correlogram.jpg', dpi=200)
     plt.close()
 
     # matplotlib labels
-    matplotlib.use('svg')  # faster
     ax = plt.subplots(2, 2, figsize=(8, 8), tight_layout=True)[1].ravel()
     y = ax[0].hist(c, bins=np.linspace(0, nc, nc + 1) - 0.5, rwidth=0.8)
     with contextlib.suppress(Exception):  # color histogram bars by class
@@ -469,36 +486,40 @@ def plot_labels(labels, names=(), save_dir=Path('')):
             ax[a].spines[s].set_visible(False)
 
     plt.savefig(save_dir / 'labels.jpg', dpi=200)
-    matplotlib.use('Agg')
     plt.close()
 
 def imshow_cls(im, labels=None, pred=None, names=None, nmax=25, verbose=False, f=Path('images.jpg')):
     # Show classification image grid with labels (optional) and predictions (optional)
-    from utils.augmentations import denormalize
-
-    names = names or [f'class{i}' for i in range(1000)]
-    blocks = torch.chunk(denormalize(im.clone()).cpu().float(), len(im),
-                         dim=0)  # select batch index 0, block by channels
-    n = min(len(blocks), nmax)  # number of plots
-    m = min(8, round(n ** 0.5))  # 8 x 8 default
-    fig, ax = plt.subplots(math.ceil(n / m), m)  # 8 rows x n/8 cols
-    ax = ax.ravel() if m > 1 else [ax]
-    # plt.subplots_adjust(wspace=0.05, hspace=0.05)
-    for i in range(n):
-        ax[i].imshow(blocks[i].squeeze().permute((1, 2, 0)).numpy().clip(0.0, 1.0))
-        ax[i].axis('off')
-        if labels is not None:
-            s = names[labels[i]] + (f'—{names[pred[i]]}' if pred is not None else '')
-            ax[i].set_title(s, fontsize=8, verticalalignment='top')
-    plt.savefig(f, dpi=300, bbox_inches='tight')
-    plt.close()
-    if verbose:
-        LOGGER.info(f"Saving {f}")
-        if labels is not None:
-            LOGGER.info('True:     ' + ' '.join(f'{names[i]:3s}' for i in labels[:nmax]))
-        if pred is not None:
-            LOGGER.info('Predicted:' + ' '.join(f'{names[i]:3s}' for i in pred[:nmax]))
-    return f
+    # NOTE: This function requires utils.augmentations module which is not present in this project
+    # Commented out to prevent import errors during training
+    
+    LOGGER.warning('imshow_cls is not available - utils.augmentations module not found')
+    return None
+    
+    # from utils.augmentations import denormalize
+    # names = names or [f'class{i}' for i in range(1000)]
+    # blocks = torch.chunk(denormalize(im.clone()).cpu().float(), len(im),
+    #                      dim=0)  # select batch index 0, block by channels
+    # n = min(len(blocks), nmax)  # number of plots
+    # m = min(8, round(n ** 0.5))  # 8 x 8 default
+    # fig, ax = plt.subplots(math.ceil(n / m), m)  # 8 rows x n/8 cols
+    # ax = ax.ravel() if m > 1 else [ax]
+    # # plt.subplots_adjust(wspace=0.05, hspace=0.05)
+    # for i in range(n):
+    #     ax[i].imshow(blocks[i].squeeze().permute((1, 2, 0)).numpy().clip(0.0, 1.0))
+    #     ax[i].axis('off')
+    #     if labels is not None:
+    #         s = names[labels[i]] + (f'—{names[pred[i]]}' if pred is not None else '')
+    #         ax[i].set_title(s, fontsize=8, verticalalignment='top')
+    # plt.savefig(f, dpi=300, bbox_inches='tight')
+    # plt.close()
+    # if verbose:
+    #     LOGGER.info(f"Saving {f}")
+    #     if labels is not None:
+    #         LOGGER.info('True:     ' + ' '.join(f'{names[i]:3s}' for i in labels[:nmax]))
+    #     if pred is not None:
+    #         LOGGER.info('Predicted:' + ' '.join(f'{names[i]:3s}' for i in pred[:nmax]))
+    # return f
 
 
 def plot_evolve(evolve_csv='path/to/evolve.csv'):  # from utils.plots import *; plot_evolve()
@@ -548,7 +569,9 @@ def plot_results(file='path/to/results.csv', dir=''):
             #     ax[i].get_shared_y_axes().join(ax[i], ax[i - 5])
         
     ax[1].legend()
-    fig.savefig(save_dir / 'results.png', dpi=200)
+    save_path = save_dir / 'results.png'
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(save_path, dpi=200)
     plt.close()
 
 

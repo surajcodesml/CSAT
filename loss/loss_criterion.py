@@ -214,7 +214,9 @@ def loss_functions(nc, phase='train'):
 	
 	matcher = build_matcher()
 	losses = ['labels', 'boxes']
-	weight_dict = {'loss_ce':2, 'loss_bbox':3, 'loss_giou':5}
-	criterion = SetCriterion(nc, matcher=matcher, losses=losses, weight_dict=weight_dict, eos_coef=0.05).to(torch.distributed.get_rank())
+	# Adjusted weights: Increase CE loss to penalize FPs more, increase GIoU for better localization original loss_ce 2, loss_bbox 3, loss_giou 5
+	weight_dict = {'loss_ce': 5, 'loss_bbox': 3, 'loss_giou': 8}
+	# Increased eos_coef from 0.05 to 0.3 to penalize false positives more heavily
+	criterion = SetCriterion(nc, matcher=matcher, losses=losses, weight_dict=weight_dict, eos_coef=0.3).to(torch.distributed.get_rank())
 	return criterion, matcher
 

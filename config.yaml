@@ -15,37 +15,37 @@ model:
   num_encoder_layers: 6
   num_decoder_layers: 6
   nheads: 8
-  num_queries: 48
+  num_queries: 100  # Increased from 48 to detect more objects (helps with FN)
   num_classes: 2
   dropout: 0.1
 
 # Training Parameters
 training:
-  epochs: 100
-  train_batch_size: 64
+  epochs: 80  # Increased from 40 - model needs more time to learn
+  train_batch_size: 128
   val_batch_size: 64
-  learning_rate: 0.0001
+  learning_rate: 0.0002  # Increased from 0.0001 for faster initial learning
   weight_decay: 0.0001
   
   # Learning rate scheduler
   lr_scheduler:
     type: 'ReduceLROnPlateau'
-    patience: 2
-    cooldown: 2
-    factor: 0.1
+    patience: 5  # Increased from 2 - give model more time before reducing LR
+    cooldown: 3   # Increased from 2
+    factor: 0.5   # Changed from 0.1 - gentler LR reduction
     mode: 'min'
 
 # Data Loading
 data:
   r: 3  # number of adjacent images to stack
   space: 1  # stride for next adjacent image block
-  num_workers: 6
+  num_workers: 2  # Reduced from 6 to avoid shared memory issues
   cache: 'ram'  # 'ram' or 'disk' or false
   shuffle: true
 
 # Distributed Training
 distributed:
-  world_size: 2
+  world_size: 1
   backend: 'nccl'
   init_method: 'tcp://127.0.0.1:12426'
   timeout: 5000

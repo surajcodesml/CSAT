@@ -167,6 +167,9 @@ def train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion, 
 		# if batch_idx>2:
 		# 	break
 
+	# Clear GPU memory cache after training epoch
+	torch.cuda.empty_cache()
+	gc.collect()
 	return model, avg_ls
 	
 	
@@ -361,6 +364,11 @@ def detector(rank, world_size, config):
 
 		model, train_loss = train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion_train, nc=nc, wb=wb)		
 		model, fitness, best_fitness, loss = run_eval(rank, root, epoch, lr_scheduler, model, val_loader, criterion_val, nc, best_fitness, config)
+		
+		# Clear GPU memory cache after validation and saving
+		torch.cuda.empty_cache()
+		gc.collect()
+		
 		lr_scheduler.step(train_loss)
 
 	if wb:
