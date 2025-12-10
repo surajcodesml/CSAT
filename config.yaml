@@ -30,7 +30,7 @@ training:
   # Learning rate scheduler
   lr_scheduler:
     type: 'ReduceLROnPlateau'
-    patience: 5  # Increased from 2 - give model more time before reducing LR
+    patience: 5  # Increased from 2, then 5 - give model more time before reducing LR
     cooldown: 3   # Increased from 2
     factor: 0.5   # Changed from 0.1 - gentler LR reduction
     mode: 'min'
