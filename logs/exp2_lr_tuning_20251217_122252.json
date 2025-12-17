@@ -66,5 +66,30 @@
       "experiment_name": "exp2_lr_tuning"
     }
   },
-  "epochs": []
+  "epochs": [
+    {
+      "epoch": 0,
+      "timestamp": "2025-12-17T12:31:38.720823",
+      "train_loss": 10.595000267028809,
+      "train_ce_loss": 1.5240000486373901,
+      "train_bbox_loss": 1.5479999780654907,
+      "train_giou_loss": 7.5229997634887695,
+      "val_loss": 9.906466437549126,
+      "fitness": 0.007146807994265621,
+      "best_fitness": 0.007146807994265621,
+      "learning_rate": 5e-05
+    },
+    {
+      "epoch": 1,
+      "timestamp": "2025-12-17T12:39:58.369559",
+      "train_loss": 8.640000343322754,
+      "train_ce_loss": 1.5609999895095825,
+      "train_bbox_loss": 0.796999990940094,
+      "train_giou_loss": 6.2820000648498535,
+      "val_loss": 6.123484099783549,
+      "fitness": 0.07714918252375808,
+      "best_fitness": 0.07714918252375808,
+      "learning_rate": 5e-05
+    }
+  ]
 }
