@@ -1,0 +1,75 @@
+# Experiment 1: Baseline Performance Assessment
+# Purpose: Establish current performance metrics with existing config
+
+# Paths
+paths:
+  root: './'
+  dataroot: './pickle'
+  pretrain_weights: 'model/best_pretrainer.pth'
+  output_dir: 'runs/exp1_baseline/'
+  train_data: 'data/train.txt'
+  val_data: 'data/val.txt'
+
+# Model Architecture
+model:
+  hidden_dim: 256
+  num_encoder_layers: 6
+  num_decoder_layers: 6
+  nheads: 8
+  num_queries: 100  # Current setting
+  num_classes: 2
+  dropout: 0.1
+
+# Training Parameters
+training:
+  epochs: 20  # Reduced for faster testing
+  train_batch_size: 128
+  val_batch_size: 64
+  learning_rate: 0.0002  # Current setting
+  weight_decay: 0.0001
+  
+  # Learning rate scheduler
+  lr_scheduler:
+    type: 'ReduceLROnPlateau'
+    patience: 5
+    cooldown: 3
+    factor: 0.5
+    mode: 'min'
+
+# Data Loading
+data:
+  r: 3
+  space: 1
+  num_workers: 2
+  cache: 'ram'
+  shuffle: true
+
+# Distributed Training
+distributed:
+  world_size: 1
+  backend: 'nccl'
+  init_method: 'tcp://127.0.0.1:12426'
+  timeout: 5000
+
+# Pretrained Weights
+pretrain:
+  use_pretrained: true
+  freeze_encoder: false
+
+# Resume Training
+resume:
+  enabled: false
+  weights_path: 'runs/outputs/detection_best.pth'
+
+# Weights & Biases
+wandb:
+  enabled: false
+  project: 'scr'
+  name: 'exp1_baseline'
+
+# Logging
+logging:
+  print_freq: 10
+  save_best: true
+  save_last: true
+  experiment_name: 'exp1_baseline'

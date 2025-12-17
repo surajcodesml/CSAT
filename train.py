@@ -40,6 +40,7 @@ from validate import epoch_validate
 from model.transformer import *
 
 from eval.eval import EvaluationCriterion, Meter
+from utils.experiment_logger import ExperimentLogger
 
 import wandb
 
@@ -170,7 +171,9 @@ def train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion, 
 	# Clear GPU memory cache after training epoch
 	torch.cuda.empty_cache()
 	gc.collect()
-	return model, avg_ls
+	
+	# Return loss components for logging
+	return model, avg_ls, {'ce_loss': float(avg_ls_dict[0]), 'bbox_loss': float(avg_ls_dict[1]), 'giou_loss': float(avg_ls_dict[2])}
 	
 	
 	
@@ -352,7 +355,13 @@ def detector(rank, world_size, config):
 				"epochs": epochs,
 				**config
 			})
-  
+	
+	# Initialize JSON experiment logger (only on rank 0)
+	experiment_logger = None
+	if rank == 0:
+		experiment_name = config.get('logging', {}).get('experiment_name', 'experiment')
+		experiment_logger = ExperimentLogger(experiment_name, config)
+		print(f'\nExperiment logging to: {experiment_logger.get_log_path()}\n')
 	
 	for epoch in range(start_epoch, epochs):
 		sampler.set_epoch(epoch)
@@ -362,8 +371,22 @@ def detector(rank, world_size, config):
 			wandb.define_metric("loss", summary="min")
 			wandb.define_metric("best_fitness", summary="max")
 
-		model, train_loss = train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion_train, nc=nc, wb=wb)		
-		model, fitness, best_fitness, loss = run_eval(rank, root, epoch, lr_scheduler, model, val_loader, criterion_val, nc, best_fitness, config)
+		model, train_loss, train_loss_dict = train_epoch(rank, model, optimizer, train_loader, epoch, epochs, criterion_train, nc=nc, wb=wb)		
+		model, fitness, best_fitness, val_loss = run_eval(rank, root, epoch, lr_scheduler, model, val_loader, criterion_val, nc, best_fitness, config)
+		
+		# Log epoch metrics to JSON (only on rank 0)
+		if rank == 0 and experiment_logger is not None:
+			epoch_metrics = {
+				'train_loss': float(train_loss),
+				'train_ce_loss': train_loss_dict['ce_loss'],
+				'train_bbox_loss': train_loss_dict['bbox_loss'],
+				'train_giou_loss': train_loss_dict['giou_loss'],
+				'val_loss': float(val_loss),
+				'fitness': float(fitness),
+				'best_fitness': float(best_fitness),
+				'learning_rate': float(lr)
+			}
+			experiment_logger.log_epoch(epoch, epoch_metrics)
 		
 		# Clear GPU memory cache after validation and saving
 		torch.cuda.empty_cache()

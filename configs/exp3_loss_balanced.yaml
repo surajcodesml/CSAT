@@ -1,0 +1,82 @@
+# Experiment 3: Loss Weight Rebalancing
+# Purpose: Find optimal loss component weights for better detection
+# Hypothesis: Current weights (CE=5, BBox=3, GIoU=8) over-emphasize localization
+# NOTE: This requires manual change in loss/loss_criterion.py line 218
+
+# Paths
+paths:
+  root: './'
+  dataroot: './pickle'
+  pretrain_weights: 'model/best_pretrainer.pth'
+  output_dir: 'runs/exp3_loss_balanced/'
+  train_data: 'data/train.txt'
+  val_data: 'data/val.txt'
+
+# Model Architecture (same as baseline)
+model:
+  hidden_dim: 256
+  num_encoder_layers: 6
+  num_decoder_layers: 6
+  nheads: 8
+  num_queries: 100
+  num_classes: 2
+  dropout: 0.1
+
+# Training Parameters
+training:
+  epochs: 20
+  train_batch_size: 128
+  val_batch_size: 64
+  learning_rate: 0.0002
+  weight_decay: 0.0001
+  
+  # Learning rate scheduler
+  lr_scheduler:
+    type: 'ReduceLROnPlateau'
+    patience: 5
+    cooldown: 3
+    factor: 0.5
+    mode: 'min'
+
+# Data Loading
+data:
+  r: 3
+  space: 1
+  num_workers: 2
+  cache: 'ram'
+  shuffle: true
+
+# Distributed Training
+distributed:
+  world_size: 1
+  backend: 'nccl'
+  init_method: 'tcp://127.0.0.1:12426'
+  timeout: 5000
+
+# Pretrained Weights
+pretrain:
+  use_pretrained: true
+  freeze_encoder: false
+
+# Resume Training
+resume:
+  enabled: false
+  weights_path: 'runs/outputs/detection_best.pth'
+
+# Weights & Biases
+wandb:
+  enabled: false
+  project: 'scr'
+  name: 'exp3_loss_balanced'
+
+# Logging
+logging:
+  print_freq: 10
+  save_best: true
+  save_last: true
+  experiment_name: 'exp3_loss_balanced'
+  
+# Loss weights (for reference - must be changed in code)
+# OPTION A - Balanced: weight_dict = {'loss_ce': 2, 'loss_bbox': 5, 'loss_giou': 2}
+# OPTION B - CE Focus: weight_dict = {'loss_ce': 8, 'loss_bbox': 2, 'loss_giou': 2}
+loss_weights_note: 'Balanced approach - CE:2, BBox:5, GIoU:2'

@@ -1,0 +1,252 @@
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+position_embedding
+backbone.conv1.weight
+backbone.bn1.weight
+backbone.bn1.bias
+backbone.layer1.0.conv1.weight
+backbone.layer1.0.bn1.weight
+backbone.layer1.0.bn1.bias
+backbone.layer1.0.conv2.weight
+backbone.layer1.0.bn2.weight
+backbone.layer1.0.bn2.bias
+backbone.layer1.0.conv3.weight
+backbone.layer1.0.bn3.weight
+backbone.layer1.0.bn3.bias
+backbone.layer1.0.downsample.0.weight
+backbone.layer1.0.downsample.1.weight
+backbone.layer1.0.downsample.1.bias
+backbone.layer1.1.conv1.weight
+backbone.layer1.1.bn1.weight
+backbone.layer1.1.bn1.bias
+backbone.layer1.1.conv2.weight
+backbone.layer1.1.bn2.weight
+backbone.layer1.1.bn2.bias
+backbone.layer1.1.conv3.weight
+backbone.layer1.1.bn3.weight
+backbone.layer1.1.bn3.bias
+backbone.layer1.2.conv1.weight
+backbone.layer1.2.bn1.weight
+backbone.layer1.2.bn1.bias
+backbone.layer1.2.conv2.weight
+backbone.layer1.2.bn2.weight
+backbone.layer1.2.bn2.bias
+backbone.layer1.2.conv3.weight
+backbone.layer1.2.bn3.weight
+backbone.layer1.2.bn3.bias
+backbone.layer2.0.conv1.weight
+backbone.layer2.0.bn1.weight
+backbone.layer2.0.bn1.bias
+backbone.layer2.0.conv2.weight
+backbone.layer2.0.bn2.weight
+backbone.layer2.0.bn2.bias
+backbone.layer2.0.conv3.weight
+backbone.layer2.0.bn3.weight
+backbone.layer2.0.bn3.bias
+backbone.layer2.0.downsample.0.weight
+backbone.layer2.0.downsample.1.weight
+backbone.layer2.0.downsample.1.bias
+backbone.layer2.1.conv1.weight
+backbone.layer2.1.bn1.weight
+backbone.layer2.1.bn1.bias
+backbone.layer2.1.conv2.weight
+backbone.layer2.1.bn2.weight
+backbone.layer2.1.bn2.bias
+backbone.layer2.1.conv3.weight
+backbone.layer2.1.bn3.weight
+backbone.layer2.1.bn3.bias
+backbone.layer2.2.conv1.weight
+backbone.layer2.2.bn1.weight
+backbone.layer2.2.bn1.bias
+backbone.layer2.2.conv2.weight
+backbone.layer2.2.bn2.weight
+backbone.layer2.2.bn2.bias
+backbone.layer2.2.conv3.weight
+backbone.layer2.2.bn3.weight
+backbone.layer2.2.bn3.bias
+backbone.layer2.3.conv1.weight
+backbone.layer2.3.bn1.weight
+backbone.layer2.3.bn1.bias
+backbone.layer2.3.conv2.weight
+backbone.layer2.3.bn2.weight
+backbone.layer2.3.bn2.bias
+backbone.layer2.3.conv3.weight
+backbone.layer2.3.bn3.weight
+backbone.layer2.3.bn3.bias
+backbone.layer3.0.conv1.weight
+backbone.layer3.0.bn1.weight
+backbone.layer3.0.bn1.bias
+backbone.layer3.0.conv2.weight
+backbone.layer3.0.bn2.weight
+backbone.layer3.0.bn2.bias
+backbone.layer3.0.conv3.weight
+backbone.layer3.0.bn3.weight
+backbone.layer3.0.bn3.bias
+backbone.layer3.0.downsample.0.weight
+backbone.layer3.0.downsample.1.weight
+backbone.layer3.0.downsample.1.bias
+backbone.layer3.1.conv1.weight
+backbone.layer3.1.bn1.weight
+backbone.layer3.1.bn1.bias
+backbone.layer3.1.conv2.weight
+backbone.layer3.1.bn2.weight
+backbone.layer3.1.bn2.bias
+backbone.layer3.1.conv3.weight
+backbone.layer3.1.bn3.weight
+backbone.layer3.1.bn3.bias
+backbone.layer3.2.conv1.weight
+backbone.layer3.2.bn1.weight
+backbone.layer3.2.bn1.bias
+backbone.layer3.2.conv2.weight
+backbone.layer3.2.bn2.weight
+backbone.layer3.2.bn2.bias
+backbone.layer3.2.conv3.weight
+backbone.layer3.2.bn3.weight
+backbone.layer3.2.bn3.bias
+backbone.layer3.3.conv1.weight
+backbone.layer3.3.bn1.weight
+backbone.layer3.3.bn1.bias
+backbone.layer3.3.conv2.weight
+backbone.layer3.3.bn2.weight
+backbone.layer3.3.bn2.bias
+backbone.layer3.3.conv3.weight
+backbone.layer3.3.bn3.weight
+backbone.layer3.3.bn3.bias
+backbone.layer3.4.conv1.weight
+backbone.layer3.4.bn1.weight
+backbone.layer3.4.bn1.bias
+backbone.layer3.4.conv2.weight
+backbone.layer3.4.bn2.weight
+backbone.layer3.4.bn2.bias
+backbone.layer3.4.conv3.weight
+backbone.layer3.4.bn3.weight
+backbone.layer3.4.bn3.bias
+backbone.layer3.5.conv1.weight
+backbone.layer3.5.bn1.weight
+backbone.layer3.5.bn1.bias
+backbone.layer3.5.conv2.weight
+backbone.layer3.5.bn2.weight
+backbone.layer3.5.bn2.bias
+backbone.layer3.5.conv3.weight
+backbone.layer3.5.bn3.weight
+backbone.layer3.5.bn3.bias
+backbone.layer4.0.conv1.weight
+backbone.layer4.0.bn1.weight
+backbone.layer4.0.bn1.bias
+backbone.layer4.0.conv2.weight
+backbone.layer4.0.bn2.weight
+backbone.layer4.0.bn2.bias
+backbone.layer4.0.conv3.weight
+backbone.layer4.0.bn3.weight
+backbone.layer4.0.bn3.bias
+backbone.layer4.0.downsample.0.weight
+backbone.layer4.0.downsample.1.weight
+backbone.layer4.0.downsample.1.bias
+backbone.layer4.1.conv1.weight
+backbone.layer4.1.bn1.weight
+backbone.layer4.1.bn1.bias
+backbone.layer4.1.conv2.weight
+backbone.layer4.1.bn2.weight
+backbone.layer4.1.bn2.bias
+backbone.layer4.1.conv3.weight
+backbone.layer4.1.bn3.weight
+backbone.layer4.1.bn3.bias
+backbone.layer4.2.conv1.weight
+backbone.layer4.2.bn1.weight
+backbone.layer4.2.bn1.bias
+backbone.layer4.2.conv2.weight
+backbone.layer4.2.bn2.weight
+backbone.layer4.2.bn2.bias
+backbone.layer4.2.conv3.weight
+backbone.layer4.2.bn3.weight
+backbone.layer4.2.bn3.bias
+linear_emb.weight
+linear_emb.bias
+encoder.layers.0.self_attn.in_proj_weight
+encoder.layers.0.self_attn.in_proj_bias
+encoder.layers.0.self_attn.out_proj.weight
+encoder.layers.0.self_attn.out_proj.bias
+encoder.layers.0.linear1.weight
+encoder.layers.0.linear1.bias
+encoder.layers.0.linear2.weight
+encoder.layers.0.linear2.bias
+encoder.layers.0.norm1.weight
+encoder.layers.0.norm1.bias
+encoder.layers.0.norm2.weight
+encoder.layers.0.norm2.bias
+encoder.layers.1.self_attn.in_proj_weight
+encoder.layers.1.self_attn.in_proj_bias
+encoder.layers.1.self_attn.out_proj.weight
+encoder.layers.1.self_attn.out_proj.bias
+encoder.layers.1.linear1.weight
+encoder.layers.1.linear1.bias
+encoder.layers.1.linear2.weight
+encoder.layers.1.linear2.bias
+encoder.layers.1.norm1.weight
+encoder.layers.1.norm1.bias
+encoder.layers.1.norm2.weight
+encoder.layers.1.norm2.bias
+encoder.layers.2.self_attn.in_proj_weight
+encoder.layers.2.self_attn.in_proj_bias
+encoder.layers.2.self_attn.out_proj.weight
+encoder.layers.2.self_attn.out_proj.bias
+encoder.layers.2.linear1.weight
+encoder.layers.2.linear1.bias
+encoder.layers.2.linear2.weight
+encoder.layers.2.linear2.bias
+encoder.layers.2.norm1.weight
+encoder.layers.2.norm1.bias
+encoder.layers.2.norm2.weight
+encoder.layers.2.norm2.bias
+encoder.layers.3.self_attn.in_proj_weight
+encoder.layers.3.self_attn.in_proj_bias
+encoder.layers.3.self_attn.out_proj.weight
+encoder.layers.3.self_attn.out_proj.bias
+encoder.layers.3.linear1.weight
+encoder.layers.3.linear1.bias
+encoder.layers.3.linear2.weight
+encoder.layers.3.linear2.bias
+encoder.layers.3.norm1.weight
+encoder.layers.3.norm1.bias
+encoder.layers.3.norm2.weight
+encoder.layers.3.norm2.bias
+encoder.layers.4.self_attn.in_proj_weight
+encoder.layers.4.self_attn.in_proj_bias
+encoder.layers.4.self_attn.out_proj.weight
+encoder.layers.4.self_attn.out_proj.bias
+encoder.layers.4.linear1.weight
+encoder.layers.4.linear1.bias
+encoder.layers.4.linear2.weight
+encoder.layers.4.linear2.bias
+encoder.layers.4.norm1.weight
+encoder.layers.4.norm1.bias
+encoder.layers.4.norm2.weight
+encoder.layers.4.norm2.bias
+encoder.layers.5.self_attn.in_proj_weight
+encoder.layers.5.self_attn.in_proj_bias
+encoder.layers.5.self_attn.out_proj.weight
+encoder.layers.5.self_attn.out_proj.bias
+encoder.layers.5.linear1.weight
+encoder.layers.5.linear1.bias
+encoder.layers.5.linear2.weight
+encoder.layers.5.linear2.bias
+encoder.layers.5.norm1.weight
+encoder.layers.5.norm1.bias
+encoder.layers.5.norm2.weight
+encoder.layers.5.norm2.bias
+
+
+
+Loaded pretrained encoder weights from model/best_pretrainer.pth
+Pretrained model best validation accuracy: 0.4980
+Pretrained model model/best_pretrainer.pth loaded
+Total trainable parameters: 19,599,886
+
+Experiment logging to: logs/exp2_lr_tuning_20251217_122252.json
+
+
+
+                              ***Training***      Epoch    GPU Mem    ce_loss    bb_loss   iou_loss  mean_loss
+ 0/79 [00:00 | ? | ?it/s]                                                   0/19         6G       2.71       2.85       7.66       13.2:  0/79 [00:11 | ? | ?it/s]                                                   0/19         6G       2.71       2.85       7.66       13.2:  1/79 [00:11 | 14:19 | 11.01s/it]                                                   0/19         7G       2.25       2.87       7.79       12.9:  1/79 [00:14 | 14:19 | 11.01s/it]                                                   0/19         7G       2.25       2.87       7.79       12.9:  2/79 [00:14 | 08:36 |  6.71s/it]                                                   0/19         7G       2.03       2.87       7.84       12.7:  2/79 [00:18 | 08:36 |  6.71s/it]                                                   0/19         7G       2.03       2.87       7.84       12.7:  3/79 [00:18 | 06:54 |  5.45s/it]                                                   0/19         7G       1.88       2.86       7.84       12.6:  3/79 [00:22 | 06:54 |  5.45s/it]                                                   0/19         7G       1.88       2.86       7.84       12.6:  4/79 [00:22 | 06:03 |  4.85s/it]                                                   0/19         7G       1.79       2.85       7.87       12.5:  4/79 [00:27 | 06:03 |  4.85s/it]                                                   0/19         7G       1.79       2.85       7.87       12.5:  5/79 [00:27 | 06:03 |  4.91s/it]                                                   0/19         7G       1.76       2.83       7.83       12.4:  5/79 [00:33 | 06:03 |  4.91s/it]                                                   0/19         7G       1.76       2.83       7.83       12.4:  6/79 [00:33 | 06:23 |  5.26s/it]                                                   0/19         7G       1.73       2.80       7.79       12.3:  6/79 [00:38 | 06:23 |  5.26s/it]                                                   0/19         7G       1.73       2.80       7.79       12.3:  7/79 [00:38 | 06:20 |  5.29s/it]                                                   0/19         7G       1.70       2.77       7.76       12.2:  7/79 [00:44 | 06:20 |  5.29s/it]                                                   0/19         7G       1.70       2.77       7.76       12.2:  8/79 [00:44 | 06:33 |  5.55s/it]                                                   0/19         7G       1.68       2.74       7.76       12.1:  8/79 [00:50 | 06:33 |  5.55s/it]                                                   0/19         7G       1.68       2.74       7.76       12.1:  9/79 [00:50 | 06:30 |  5.58s/it]                                                   0/19         7G       1.65       2.71       7.73       12.1:  9/79 [00:57 | 06:30 |  5.58s/it]                                                   0/19         7G       1.65       2.71       7.73       12.1:  10/79 [00:57 | 06:47 |  5.91s/it]                                                   0/19         7G       1.63       2.69       7.75       12.0:  10/79 [01:02 | 06:47 |  5.91s/it]                                                   0/19         7G       1.63       2.69       7.75       12.0:  11/79 [01:02 | 06:36 |  5.83s/it]                                                   0/19         7G       1.62       2.66       7.73       12.0:  11/79 [01:09 | 06:36 |  5.83s/it]                                                   0/19         7G       1.62       2.66       7.73       12.0:  12/79 [01:09 | 06:43 |  6.03s/it]                                                   0/19         7G       1.60       2.63       7.72       11.9:  12/79 [01:13 | 06:43 |  6.03s/it]                                                   0/19         7G       1.60       2.63       7.72       11.9:  13/79 [01:13 | 06:03 |  5.51s/it]                                                   0/19         7G       1.59       2.60       7.71       11.9:  13/79 [01:20 | 06:03 |  5.51s/it]                                                   0/19         7G       1.59       2.60       7.71       11.9:  14/79 [01:20 | 06:14 |  5.77s/it]                                                   0/19         7G       1.58       2.57       7.70       11.8:  14/79 [01:24 | 06:14 |  5.77s/it]                                                   0/19         7G       1.58       2.57       7.70       11.8:  15/79 [01:24 | 05:35 |  5.25s/it]                                                   0/19         7G       1.57       2.55       7.68       11.8:  15/79 [01:30 | 05:35 |  5.25s/it]                                                   0/19         7G       1.57       2.55       7.68       11.8:  16/79 [01:30 | 05:42 |  5.43s/it]                                                   0/19         7G       1.56       2.52       7.67       11.7:  16/79 [01:33 | 05:42 |  5.43s/it]                                                   0/19         7G       1.56       2.52       7.67       11.7:  17/79 [01:33 | 05:09 |  4.99s/it]                                                   0/19         7G       1.55       2.50       7.67       11.7:  17/79 [01:37 | 05:09 |  4.99s/it]                                                   0/19         7G       1.55       2.50       7.67       11.7:  18/79 [01:37 | 04:42 |  4.64s/it]                                                   0/19         7G       1.54       2.47       7.66       11.6:  18/79 [01:42 | 04:42 |  4.64s/it]                                                   0/19         7G       1.54       2.47       7.66       11.6:  19/79 [01:42 | 04:34 |  4.58s/it]                                                   0/19         7G       1.54       2.45       7.66       11.6:  19/79 [01:45 | 04:34 |  4.58s/it]                                                   0/19         7G       1.54       2.45       7.66       11.6:  20/79 [01:45 | 04:15 |  4.33s/it]                                                   0/19         7G       1.54       2.42       7.65       11.6:  20/79 [01:50 | 04:15 |  4.33s/it]                                                   0/19         7G       1.54       2.42       7.65       11.6:  21/79 [01:50 | 04:11 |  4.33s/it]                                                   0/19         7G       1.54       2.40       7.64       11.5:  21/79 [01:54 | 04:11 |  4.33s/it]                                                   0/19         7G       1.54       2.40       7.64       11.5:  22/79 [01:54 | 03:56 |  4.16s/it]                                                   0/19         7G       1.53       2.38       7.66       11.5:  22/79 [01:58 | 03:56 |  4.16s/it]                                                   0/19         7G       1.53       2.38       7.66       11.5:  23/79 [01:58 | 03:53 |  4.16s/it]                                                   0/19         7G       1.53       2.36       7.65       11.5:  23/79 [02:02 | 03:53 |  4.16s/it]                                                   0/19         7G       1.53       2.36       7.65       11.5:  24/79 [02:02 | 03:48 |  4.16s/it]                                                   0/19         7G       1.53       2.33       7.64       11.5:  24/79 [02:07 | 03:48 |  4.16s/it]                                                   0/19         7G       1.53       2.33       7.64       11.5:  25/79 [02:07 | 03:54 |  4.34s/it]                                                   0/19         7G       1.53       2.31       7.63       11.4:  25/79 [02:10 | 03:54 |  4.34s/it]                                                   0/19         7G       1.53       2.31       7.63       11.4:  26/79 [02:10 | 03:40 |  4.16s/it]                                                   0/19         7G       1.53       2.29       7.63       11.4:  26/79 [02:15 | 03:40 |  4.16s/it]                                                   0/19         7G       1.53       2.29       7.63       11.4:  27/79 [02:15 | 03:40 |  4.25s/it]                                                   0/19         7G       1.53       2.26       7.62       11.4:  27/79 [02:19 | 03:40 |  4.25s/it]                                                   0/19         7G       1.53       2.26       7.62       11.4:  28/79 [02:19 | 03:31 |  4.14s/it]                                                   0/19         7G       1.52       2.24       7.61       11.3:  28/79 [02:23 | 03:31 |  4.14s/it]                                                   0/19         7G       1.52       2.24       7.61       11.3:  29/79 [02:23 | 03:28 |  4.17s/it]                                                   0/19         7G       1.52       2.22       7.61       11.3:  29/79 [02:27 | 03:28 |  4.17s/it]                                                   0/19         7G       1.52       2.22       7.61       11.3:  30/79 [02:27 | 03:18 |  4.05s/it]                                                   0/19         7G       1.52       2.20       7.61       11.3:  30/79 [02:31 | 03:18 |  4.05s/it]                                                   0/19         7G       1.52       2.20       7.61       11.3:  31/79 [02:31 | 03:13 |  4.04s/it]                                                   0/19         7G       1.52       2.18       7.60       11.3:  31/79 [02:34 | 03:13 |  4.04s/it]                                                   0/19         7G       1.52       2.18       7.60       11.3:  32/79 [02:34 | 03:05 |  3.95s/it]                                                   0/19         7G       1.51       2.16       7.60       11.2:  32/79 [02:38 | 03:05 |  3.95s/it]                                                   0/19         7G       1.51       2.16       7.60       11.2:  33/79 [02:38 | 03:01 |  3.95s/it]                                                   0/19         7G       1.52       2.14       7.61       11.2:  33/79 [02:42 | 03:01 |  3.95s/it]                                                   0/19         7G       1.52       2.14       7.61       11.2:  34/79 [02:42 | 02:54 |  3.89s/it]                                                   0/19         7G       1.52       2.12       7.61       11.2:  34/79 [02:46 | 02:54 |  3.89s/it]                                                   0/19         7G       1.52       2.12       7.61       11.2:  35/79 [02:46 | 02:51 |  3.91s/it]                                                   0/19         7G       1.52       2.10       7.61       11.2:  35/79 [02:50 | 02:51 |  3.91s/it]                                                   0/19         7G       1.52       2.10       7.61       11.2:  36/79 [02:50 | 02:45 |  3.86s/it]                                                   0/19         7G       1.52       2.08       7.61       11.2:  36/79 [02:54 | 02:45 |  3.86s/it]                                                   0/19         7G       1.52       2.08       7.61       11.2:  37/79 [02:54 | 02:43 |  3.90s/it]                                                   0/19         7G       1.52       2.06       7.61       11.2:  37/79 [02:58 | 02:43 |  3.90s/it]                                                   0/19         7G       1.52       2.06       7.61       11.2:  38/79 [02:58 | 02:37 |  3.85s/it]                                                   0/19         7G       1.52       2.04       7.62       11.1:  38/79 [03:02 | 02:37 |  3.85s/it]                                                   0/19         7G       1.52       2.04       7.62       11.1:  39/79 [03:02 | 02:35 |  3.89s/it]                                                   0/19         7G       1.52       2.02       7.62       11.1:  39/79 [03:05 | 02:35 |  3.89s/it]                                                   0/19         7G       1.52       2.02       7.62       11.1:  40/79 [03:05 | 02:29 |  3.84s/it]                                                   0/19         7G       1.52       2.01       7.61       11.1:  40/79 [03:09 | 02:29 |  3.84s/it]                                                   0/19         7G       1.52       2.01       7.61       11.1:  41/79 [03:09 | 02:27 |  3.88s/it]                                                   0/19         7G       1.53       1.99       7.61       11.1:  41/79 [03:13 | 02:27 |  3.88s/it]                                                   0/19         7G       1.53       1.99       7.61       11.1:  42/79 [03:13 | 02:22 |  3.84s/it]                                                   0/19         7G       1.53       1.97       7.60       11.1:  42/79 [03:17 | 02:22 |  3.84s/it]                                                   0/19         7G       1.53       1.97       7.60       11.1:  43/79 [03:17 | 02:20 |  3.89s/it]                                                   0/19         7G       1.53       1.95       7.59       11.0:  43/79 [03:21 | 02:20 |  3.89s/it]                                                   0/19         7G       1.53       1.95       7.59       11.0:  44/79 [03:21 | 02:14 |  3.85s/it]                                                   0/19         7G       1.53       1.93       7.59       11.0:  44/79 [03:25 | 02:14 |  3.85s/it]                                                   0/19         7G       1.53       1.93       7.59       11.0:  45/79 [03:25 | 02:12 |  3.88s/it]                                                   0/19         7G       1.52       1.91       7.59       11.0:  45/79 [03:29 | 02:12 |  3.88s/it]                                                   0/19         7G       1.52       1.91       7.59       11.0:  46/79 [03:29 | 02:06 |  3.84s/it]                                                   0/19         7G       1.52       1.90       7.58       11.0:  46/79 [03:32 | 02:06 |  3.84s/it]                                                   0/19         7G       1.52       1.90       7.58       11.0:  47/79 [03:32 | 02:04 |  3.88s/it]                                                   0/19         7G       1.52       1.88       7.58       11.0:  47/79 [03:36 | 02:04 |  3.88s/it]                                                   0/19         7G       1.52       1.88       7.58       11.0:  48/79 [03:36 | 01:59 |  3.84s/it]                                                   0/19         7G       1.52       1.87       7.58       10.9:  48/79 [03:40 | 01:59 |  3.84s/it]                                                   0/19         7G       1.52       1.87       7.58       10.9:  49/79 [03:40 | 01:56 |  3.88s/it]                                                   0/19         7G       1.52       1.85       7.58       10.9:  49/79 [03:44 | 01:56 |  3.88s/it]                                                   0/19         7G       1.52       1.85       7.58       10.9:  50/79 [03:44 | 01:51 |  3.84s/it]                                                   0/19         7G       1.52       1.83       7.57       10.9:  50/79 [03:48 | 01:51 |  3.84s/it]                                                   0/19         7G       1.52       1.83       7.57       10.9:  51/79 [03:48 | 01:48 |  3.87s/it]                                                   0/19         7G       1.52       1.82       7.57       10.9:  51/79 [03:52 | 01:48 |  3.87s/it]                                                   0/19         7G       1.52       1.82       7.57       10.9:  52/79 [03:52 | 01:43 |  3.84s/it]                                                   0/19         7G       1.52       1.80       7.57       10.9:  52/79 [03:56 | 01:43 |  3.84s/it]                                                   0/19         7G       1.52       1.80       7.57       10.9:  53/79 [03:56 | 01:40 |  3.87s/it]                                                   0/19         7G       1.52       1.79       7.57       10.8:  53/79 [03:59 | 01:40 |  3.87s/it]                                                   0/19         7G       1.52       1.79       7.57       10.8:  54/79 [03:59 | 01:35 |  3.83s/it]                                                   0/19         7G       1.52       1.78       7.57       10.8:  54/79 [04:04 | 01:35 |  3.83s/it]                                                   0/19         7G       1.52       1.78       7.57       10.8:  55/79 [04:04 | 01:37 |  4.05s/it]                                                   0/19         7G       1.52       1.77       7.57       10.8:  55/79 [04:08 | 01:37 |  4.05s/it]                                                   0/19         7G       1.52       1.77       7.57       10.8:  56/79 [04:08 | 01:31 |  3.96s/it]                                                   0/19         7G       1.52       1.75       7.57       10.8:  56/79 [04:12 | 01:31 |  3.96s/it]                                                   0/19         7G       1.52       1.75       7.57       10.8:  57/79 [04:12 | 01:28 |  4.03s/it]                                                   0/19         7G       1.52       1.74       7.57       10.8:  57/79 [04:16 | 01:28 |  4.03s/it]                                                   0/19         7G       1.52       1.74       7.57       10.8:  58/79 [04:16 | 01:22 |  3.94s/it]                                                   0/19         7G       1.52       1.73       7.56       10.8:  58/79 [04:20 | 01:22 |  3.94s/it]                                                   0/19         7G       1.52       1.73       7.56       10.8:  59/79 [04:20 | 01:18 |  3.94s/it]                                                   0/19         7G       1.52       1.72       7.56       10.8:  59/79 [04:23 | 01:18 |  3.94s/it]                                                   0/19         7G       1.52       1.72       7.56       10.8:  60/79 [04:23 | 01:13 |  3.88s/it]                                                   0/19         7G       1.52       1.71       7.55       10.8:  60/79 [04:27 | 01:13 |  3.88s/it]                                                   0/19         7G       1.52       1.71       7.55       10.8:  61/79 [04:27 | 01:10 |  3.91s/it]                                                   0/19         7G       1.52       1.70       7.55       10.7:  61/79 [04:31 | 01:10 |  3.91s/it]                                                   0/19         7G       1.52       1.70       7.55       10.7:  62/79 [04:31 | 01:05 |  3.86s/it]                                                   0/19         7G       1.52       1.69       7.55       10.7:  62/79 [04:35 | 01:05 |  3.86s/it]                                                   0/19         7G       1.52       1.69       7.55       10.7:  63/79 [04:35 | 01:02 |  3.88s/it]                                                   0/19         7G       1.52       1.68       7.54       10.7:  63/79 [04:39 | 01:02 |  3.88s/it]                                                   0/19         7G       1.52       1.68       7.54       10.7:  64/79 [04:39 | 00:58 |  3.90s/it]                                                   0/19         7G       1.52       1.67       7.54       10.7:  64/79 [04:43 | 00:58 |  3.90s/it]                                                   0/19         7G       1.52       1.67       7.54       10.7:  65/79 [04:43 | 00:54 |  3.91s/it]                                                   0/19         7G       1.52       1.66       7.54       10.7:  65/79 [04:47 | 00:54 |  3.91s/it]                                                   0/19         7G       1.52       1.66       7.54       10.7:  66/79 [04:47 | 00:52 |  4.01s/it]                                                   0/19         7G       1.52       1.64       7.53       10.7:  66/79 [04:51 | 00:52 |  4.01s/it]                                                   0/19         7G       1.52       1.64       7.53       10.7:  67/79 [04:51 | 00:48 |  4.00s/it]                                                   0/19         7G       1.52       1.64       7.53       10.7:  67/79 [04:55 | 00:48 |  4.00s/it]                                                   0/19         7G       1.52       1.64       7.53       10.7:  68/79 [04:55 | 00:43 |  3.92s/it]                                                   0/19         7G       1.52       1.63       7.53       10.6:  68/79 [04:59 | 00:43 |  3.92s/it]                                                   0/19         7G       1.52       1.63       7.53       10.6:  69/79 [04:59 | 00:39 |  3.92s/it]                                                   0/19         7G       1.52       1.62       7.53       10.6:  69/79 [05:02 | 00:39 |  3.92s/it]                                                   0/19         7G       1.52       1.62       7.53       10.6:  70/79 [05:02 | 00:34 |  3.87s/it]                                                   0/19         7G       1.52       1.61       7.53       10.6:  70/79 [05:06 | 00:34 |  3.87s/it]                                                   0/19         7G       1.52       1.61       7.53       10.6:  71/79 [05:06 | 00:31 |  3.88s/it]                                                   0/19         7G       1.52       1.60       7.53       10.6:  71/79 [05:10 | 00:31 |  3.88s/it]                                                   0/19         7G       1.52       1.60       7.53       10.6:  72/79 [05:10 | 00:26 |  3.84s/it]                                                   0/19         7G       1.52       1.59       7.53       10.6:  72/79 [05:14 | 00:26 |  3.84s/it]                                                   0/19         7G       1.52       1.59       7.53       10.6:  73/79 [05:14 | 00:23 |  3.87s/it]                                                   0/19         7G       1.52       1.58       7.53       10.6:  73/79 [05:18 | 00:23 |  3.87s/it]                                                   0/19         7G       1.52       1.58       7.53       10.6:  74/79 [05:18 | 00:19 |  3.84s/it]                                                   0/19         7G       1.52       1.57       7.53       10.6:  74/79 [05:22 | 00:19 |  3.84s/it]                                                   0/19         7G       1.52       1.57       7.53       10.6:  75/79 [05:22 | 00:15 |  3.86s/it]                                                   0/19         7G       1.52       1.57       7.53       10.6:  75/79 [05:25 | 00:15 |  3.86s/it]                                                   0/19         7G       1.52       1.57       7.53       10.6:  76/79 [05:25 | 00:11 |  3.83s/it]                                                   0/19         7G       1.52       1.56       7.53       10.6:  76/79 [05:29 | 00:11 |  3.83s/it]                                                   0/19         7G       1.52       1.56       7.53       10.6:  77/79 [05:29 | 00:07 |  3.86s/it]                                                   0/19         7G       1.52       1.55       7.53       10.6:  77/79 [05:33 | 00:07 |  3.86s/it]                                                   0/19         7G       1.52       1.55       7.53       10.6:  78/79 [05:33 | 00:03 |  3.83s/it]                                                   0/19         3G       1.52       1.54       7.52       10.5:  78/79 [05:35 | 00:03 |  3.83s/it]                                                   0/19         3G       1.52       1.54       7.52       10.5:  79/79 [05:35 | 00:00 |  3.13s/it]                                                   0/19         3G       1.52       1.54       7.52       10.5:  79/79 [06:05 | 00:00 |  4.62s/it]
+
+                            ***Validation***             bbox_loss               ce_loss             giou_loss            total_loss
+ 0/41 [00:00 | ? | ?it/s]                                                            0.3308                 0.288                0.9307                 9.878:  0/41 [00:03 | ? | ?it/s]                                                            0.3308                 0.288                0.9307                 9.878:  1/41 [00:04 | 02:57 |  4.43s/it]                                                              0.36                0.2799                0.9668                 10.21:  1/41 [00:06 | 02:57 |  4.43s/it]                                                              0.36                0.2799                0.9668                 10.21:  2/41 [00:07 | 02:19 |  3.57s/it]                                                            0.3492                0.2977                0.9119                 9.831:  2/41 [00:09 | 02:19 |  3.57s/it]                                                            0.3492                0.2977                0.9119                 9.831:  3/41 [00:10 | 02:09 |  3.42s/it]                                                            0.3205                0.3129                0.9607                 10.21:  3/41 [00:12 | 02:09 |  3.42s/it]                                                            0.3205                0.3129                0.9607                 10.21:  4/41 [00:13 | 02:00 |  3.27s/it]                                                            0.3443                0.3041                0.9276                 9.974:  4/41 [00:15 | 02:00 |  3.27s/it]                                                            0.3443                0.3041                0.9276                 9.974:  5/41 [00:16 | 01:56 |  3.23s/it]                                                            0.3427                0.2916                 0.911                 9.775:  5/41 [00:18 | 01:56 |  3.23s/it]                                                            0.3427                0.2916                 0.911                 9.775:  6/41 [00:19 | 01:50 |  3.15s/it]                                                            0.3284                0.2837                0.8897                 9.522:  6/41 [00:21 | 01:50 |  3.15s/it]                                                            0.3284                0.2837                0.8897                 9.522:  7/41 [00:22 | 01:46 |  3.15s/it]                                                             0.313                0.2997                0.9175                 9.777:  7/41 [00:24 | 01:46 |  3.15s/it]                                                             0.313                0.2997                0.9175                 9.777:  8/41 [00:25 | 01:42 |  3.10s/it]                                                            0.3174                0.3161                0.9445                 10.09:  8/41 [00:27 | 01:42 |  3.10s/it]

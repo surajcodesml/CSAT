@@ -62,7 +62,6 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -167,8 +166,53 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-#ignore image files
+# Ignore image files
 *.png
 *.jpg
 *.jpeg
 *.gif
+*.bmp
+*.tiff
+*.tif
+
+# Ignore large training/model files
+runs/
+pickle/
+checkpoints/
+checkpoints_*/
+*.pth
+*.pt
+*.ckpt
+*.h5
+*.hdf5
+
+# Ignore training logs and outputs
+wandb/
+*.out
+*.txt.bak
+
+# Ignore experiment outputs
+valimages/
+inference/
+*_inference/
+
+# Ignore large data files
+*.npy
+*.npz
+*.csv
+*.json.bak
+*.tar
+*.tar.gz
+*.zip
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Ignore Jupyter notebook outputs
+*.ipynb_checkpoints/
+.ipynb_checkpoints/

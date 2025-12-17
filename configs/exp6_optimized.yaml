@@ -1,0 +1,81 @@
+# Experiment 6: Combined Optimized Configuration
+# Purpose: Combine best insights from experiments 2-5
+# Based on predicted optimal settings
+
+# Paths
+paths:
+  root: './'
+  dataroot: './pickle'
+  pretrain_weights: 'model/best_pretrainer.pth'
+  output_dir: 'runs/exp6_optimized/'
+  train_data: 'data/train.txt'
+  val_data: 'data/val.txt'
+
+# Model Architecture
+model:
+  hidden_dim: 256
+  num_encoder_layers: 6
+  num_decoder_layers: 6
+  nheads: 8
+  num_queries: 50  # REDUCED from 100
+  num_classes: 2
+  dropout: 0.15  # INCREASED from 0.1
+
+# Training Parameters
+training:
+  epochs: 50  # EXTENDED for final optimized run
+  train_batch_size: 48  # BALANCED between 32 and 128
+  val_batch_size: 32
+  learning_rate: 0.00008  # LOWER for stable fine-tuning
+  weight_decay: 0.0001
+  
+  # Learning rate scheduler
+  lr_scheduler:
+    type: 'ReduceLROnPlateau'
+    patience: 10  # INCREASED - be more patient
+    cooldown: 3
+    factor: 0.7  # GENTLER reduction
+    mode: 'min'
+
+# Data Loading
+data:
+  r: 3
+  space: 1
+  num_workers: 2
+  cache: 'ram'
+  shuffle: true
+
+# Distributed Training
+distributed:
+  world_size: 1
+  backend: 'nccl'
+  init_method: 'tcp://127.0.0.1:12426'
+  timeout: 5000
+
+# Pretrained Weights
+pretrain:
+  use_pretrained: true
+  freeze_encoder: false
+
+# Resume Training
+resume:
+  enabled: false
+  weights_path: 'runs/outputs/detection_best.pth'
+
+# Weights & Biases
+wandb:
+  enabled: false
+  project: 'scr'
+  name: 'exp6_optimized'
+
+# Logging
+logging:
+  print_freq: 10
+  save_best: true
+  save_last: true
+  experiment_name: 'exp6_optimized'
+
+# Loss weights (for reference - requires code change)
+# weight_dict = {'loss_ce': 4, 'loss_bbox': 3, 'loss_giou': 3}
+# eos_coef: 0.2
+loss_weights_note: 'Optimized - CE:4, BBox:3, GIoU:3, eos:0.2'
